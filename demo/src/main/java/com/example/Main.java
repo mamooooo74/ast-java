@@ -3,18 +3,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
     public static void main(String[] args) {
         Dotenv dotenv = Dotenv.load();
-        String dir = dotenv.get("dir");
-        Path path = Paths.get(dir + "Main.java");
+        
+        
         try {
-			String content = Files.readString(path);
-            String ast = ASTTransformer.transform(content);
-            System.out.println(ast);
+            // javaのソースコードを取得
+            String source_dir = dotenv.get("JAVA_SOURCE_CODE_DIR");
+            Path sourceFilePath = Paths.get(source_dir, "Main.java");
+            String content = Files.readString(sourceFilePath);
+
+            // ソースコードをjsonに変換
+            String ast = ASTTransformer.convertToJson(content);
+
+            // jsonをファイルに書き込む
+            String output_json_dir = dotenv.get("OUTPUT_JSON_DIR");
+            Path outPutPath = Paths.get(output_json_dir, "ast_output.json");
+            Files.write(outPutPath, ast.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             
 		} catch(IOException ex) {
 			ex.printStackTrace();
