@@ -25,6 +25,8 @@ public class Main {
             String output_json_dir = dotenv.get("OUTPUT_JSON_DIR");
             Path outPutPath = Paths.get(output_json_dir, "ast_output.json");
             Files.write(outPutPath, ast.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+            // System.out.println(ASTTransformer.convertFromJson(Files.readString(outPutPath)));
             
 		} catch(IOException ex) {
 			ex.printStackTrace();
